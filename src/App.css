@@ -13,6 +13,7 @@ header {
   align-items: center;
   width: 60%;
   gap: 10%;
+  overflow-x: hidden;
 }
 
 nav {
