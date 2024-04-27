@@ -7,112 +7,88 @@ import left from "../assest/left.png";
 import right from "../assest/right.png";
 
 export default function Gallery() {
-  const [change, setChange] = useState<string>(img1);
-  const [galleryModal, setgalleryModal] = useState<boolean>(false);
-  const [countnum, setCountNum] = useState(1);
+  const images = [img1, img2, img3, img4];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [galleryModal, setGalleryModal] = useState(false);
 
-  const changeImg = (newImage: string) => {
-    setChange(newImage);
+  const changeImg = (newImageIndex: number) => {
+    setCurrentImageIndex(newImageIndex);
   };
 
   const openGalleryModal = () => {
-    setgalleryModal(true);
+    setGalleryModal(true);
+  };
+
+  const closeGalleryModal = () => {
+    setGalleryModal(false);
+  };
+
+  const nextImage = () => {
+    const newIndex = (currentImageIndex + 1) % images.length;
+    setCurrentImageIndex(newIndex);
+  };
+
+  const prevImage = () => {
+    const newIndex = (currentImageIndex - 1 + images.length) % images.length;
+    setCurrentImageIndex(newIndex);
   };
 
   return (
     <>
-      {galleryModal ? <div className="blackbackground"></div> : <div></div>}
+      {galleryModal && <div className="blackbackground"></div>}
       <div className={`gallery ${galleryModal ? "active" : ""}`}>
-        {galleryModal ? (
-          <button className="colorX" onClick={() => setgalleryModal(false)}>
+        {galleryModal && (
+          <button className="colorX" onClick={closeGalleryModal}>
             X
           </button>
-        ) : (
-          <div></div>
         )}
         <div className="mine_img">
           {galleryModal ? (
             <>
               <img
-                src={`/src/assest/products/pr${countnum}.png`}
+                src={images[currentImageIndex]}
+                onClick={openGalleryModal}
                 alt="product"
               />
             </>
           ) : (
             <>
               <img
-                src={change}
+                src={images[currentImageIndex]}
                 onClick={openGalleryModal}
                 alt="product"
                 className="wbig"
               />
               <img
-                src={`/src/assest/products/pr${countnum}.png`}
+                src={images[currentImageIndex]}
                 alt="product"
                 className="wsmall"
               />
             </>
           )}
         </div>
-
-        <div className="arrows1">
-          <img
-            src={left}
-            onClick={() => setCountNum(countnum <= 1 ? countnum : countnum - 1)}
-            className="left"
-          />{" "}
-          <img
-            src={right}
-            onClick={() => setCountNum(countnum >= 4 ? countnum : countnum + 1)}
-            className="right"
-          />
-        </div>
-
-        {galleryModal ? (
-          <>
-            <div className="arrows">
-              <img
-                src={left}
-                onClick={() =>
-                  setCountNum(countnum <= 1 ? countnum : countnum - 1)
-                }
-                className="left"
-              />{" "}
-              <img
-                src={right}
-                onClick={() =>
-                  setCountNum(countnum >= 4 ? countnum : countnum + 1)
-                }
-                className="right"
-              />
-            </div>
-          </>
-        ) : null}
+        {galleryModal && (
+          <div className="arrows">
+            <img src={left} className="left" onClick={prevImage} />
+            <img src={right} className="right" onClick={nextImage} />
+          </div>
+        )}
+          <div className="arrows1">
+            <img src={left} className="left" onClick={prevImage} />
+            <img src={right} className="right" onClick={nextImage} />
+          </div>
         <div className="select_img">
-          <img
-            src={img1}
-            onClick={() => changeImg(img1)}
-            style={change === img1 ? { opacity: 0.5 } : { opacity: 1 }}
-            alt="product"
-          />
-          <img
-            src={img2}
-            onClick={() => changeImg(img2)}
-            style={change === img2 ? { opacity: 0.5 } : { opacity: 1 }}
-            alt="product"
-          />
-          <img
-            src={img3}
-            onClick={() => changeImg(img3)}
-            style={change === img3 ? { opacity: 0.5 } : { opacity: 1 }}
-            alt="product"
-          />
-          <img
-            src={img4}
-            onClick={() => changeImg(img4)}
-            style={change === img4 ? { opacity: 0.5 } : { opacity: 1 }}
-            alt="product"
-          />
+          {images.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              onClick={() => changeImg(index)}
+              style={
+                currentImageIndex === index ? { opacity: 0.5 } : { opacity: 1 }
+              }
+              alt="product"
+            />
+          ))}
         </div>
       </div>
     </>
